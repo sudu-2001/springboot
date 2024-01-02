@@ -1,0 +1,134 @@
+================================main file==================================
+package com.example.Institute.institute;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Scanner;
+
+@SpringBootApplication
+public class InstituteApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(InstituteApplication.class, args);
+        ApplicationContext ac = new ClassPathXmlApplicationContext("testBean.xml");
+        Department dt = (Department) ac.getBean("department");
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("1. Insert the Department details\n" +
+                    "2. Display Department with College details\n" +
+                    "3. Exit");
+            System.out.println("Enter the choice");
+            int a = sc.nextInt();
+
+            switch (a) {
+                case 1:
+                    System.out.println("Enter the Department name");
+                    dt.setName(sc.next());
+                    System.out.println("Enter the Department no");
+                    dt.setId(sc.nextInt());
+                    System.out.println("Enter the Department Description");
+                    dt.setDescription(sc.next());
+                    System.out.println("Thanks for input");
+                    break;
+
+                case 2:
+                    System.out.println("Department Details:");
+                    System.out.println("Name: " + dt.getName() + " ID: " + dt.getId() +
+                            " Department Description: " + dt.getDescription());
+                    System.out.println("College Details");
+                    College c = dt.getCollege();
+                    System.out.println("College Name: " + c.getName());
+                    System.out.println("College Address: " + c.getAddress());
+                    break;
+
+                case 3:
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+                    break;
+            }
+        }
+    }
+}
+=================================college.java===============================
+package com.example.Institute.institute;
+
+public class College {
+	String name,address;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+}
+==============================department.java==============================
+package com.example.Institute.institute;
+
+public class Department {
+	String name,description;
+	int id;
+	College college;
+	public Department(College college) {
+		this.college=college;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public College getCollege() {
+		return college;
+	}
+	public void setCollege(College college) {
+		this.college = college;
+	}
+
+}
+==========================testBean.xml=======================================
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="department" class="com.example.Institute.institute.Department" scope="prototype">
+        <constructor-arg name="college" ref="college"/>
+    </bean>
+
+    <bean id="college" class="com.example.Institute.institute.College" scope="singleton">
+        <property name="name" value="rvce"/>
+        <property name="address" value="mysuru road"/>
+    </bean>
+
+</beans>
+
